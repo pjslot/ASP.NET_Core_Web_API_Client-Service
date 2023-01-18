@@ -123,26 +123,42 @@ namespace ASP.NET_Core_Web_API_Client_Service.Controllers
         }
 
         //метод скидки на все товары
+                                                                                 //Invoke-RestMethod http://localhost:5000/api/product/discountall/50 -Method PUT
         [HttpPut("discountall/{discount}")]
         public async Task<ActionResult<Product>> PutDiscountAll(int discount)
         {
-
-
-            List<Product> products =  db.Products.ToList();
+            List<Product> products = await db.Products.ToListAsync();
 
             foreach (var p in products)
             {
                 p.Price = p.Price/100*discount;
                 db.Update(p);
             }
-
-           
-            
+     
             await db.SaveChangesAsync();
             return Ok(products);
         }
-        
-        //PS C:\Users\VS> Invoke-RestMethod http://localhost:5000/api/product/discountall/50 -Method PUT
+
+        //метод скидки на товар с определённым именем        
+                                                                                //Invoke-RestMethod http://localhost:5000/api/product/discountname/cheese/50 -Method PUT
+        [HttpPut("discountname/{name}/{discount}")]
+        public async Task<ActionResult<Product>> PutDiscountName(string name, int discount)
+        {
+            List<Product> products = await db.Products.ToListAsync();
+
+            foreach (var p in products)
+            {
+                if (p.Name == name) p.Price = p.Price / 100 * discount;
+                db.Update(p);
+            }
+
+            await db.SaveChangesAsync();
+            return Ok(products);
+        }
+
+
+
+
 
     }
 }
