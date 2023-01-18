@@ -88,5 +88,61 @@ namespace ASP.NET_Core_Web_API_Client_Service.Controllers
             return Ok(user);
         }
 
+        //метод возвращения информации по конкретной цене товара
+        [HttpGet("price/{price}")]
+        public async Task<ActionResult<IEnumerable<Product>>> Get(int price)
+        {
+            List<Product> products = await db.Products.Where(x => x.Price == price).ToListAsync();
+            if (products.Count == 0) return NotFound();
+            return products;
+        }
+
+        //метод возвращения количества товаров с определённым именем
+        [HttpGet("namecount/{name}")]
+        public async Task<ActionResult<int>> GetNameCount(string name)
+        {
+            List<Product> products = await db.Products.Where(x => x.Name == name).ToListAsync();
+            if (products.Count == 0) return NotFound();
+
+            return products.Count;
+        }
+
+        //метод получения информации о средней цене по товарам
+        [HttpGet("priceaverage")]
+        public async Task<ActionResult<double>> GetPriceAverage()
+        {
+            int totalprice = 0;
+            double priceavg = 0;
+            List<Product> products = await db.Products.ToListAsync();
+            foreach (var p in products)
+            {
+                totalprice += p.Price;
+            }
+            priceavg = totalprice / products.Count;
+            return priceavg;
+        }
+
+        //метод скидки на все товары
+        [HttpPut("discountall/{discount}")]
+        public async Task<ActionResult<Product>> PutDiscountAll(int discount)
+        {
+
+
+            List<Product> products =  db.Products.ToList();
+
+            foreach (var p in products)
+            {
+                p.Price = p.Price/100*discount;
+                db.Update(p);
+            }
+
+           
+            
+            await db.SaveChangesAsync();
+            return Ok(products);
+        }
+        
+        //PS C:\Users\VS> Invoke-RestMethod http://localhost:5000/api/product/discountall/50 -Method PUT
+
     }
 }
