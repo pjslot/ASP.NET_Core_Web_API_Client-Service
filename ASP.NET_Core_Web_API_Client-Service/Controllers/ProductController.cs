@@ -1,4 +1,5 @@
-﻿using ASP.NET_Core_Web_API_Client_Service.Models;
+﻿//Kabluchkov DS (c) 2023
+using ASP.NET_Core_Web_API_Client_Service.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
